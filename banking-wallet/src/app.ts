@@ -22,6 +22,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     error: error.stack
   })
 })
-app.use('/api', wrouter)
-app.use('/api', wtrouter)
+app.use('/api/wallet/', wrouter)
+app.use('/api/wallet-type/', wtrouter)
 export default app

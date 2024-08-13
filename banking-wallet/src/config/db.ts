@@ -1,16 +1,16 @@
 import { Pool } from 'pg'
 
 export const pool = new Pool({
-  user: '',
-  password: '',
-  host: '',
+  user: 'dev',
+  password: '12345678',
+  host: 'localhost',
   port: 5432,
-  database: ''
+  database: 'Banking_wallet'
 })
 
 pool.connect((error, client, release) => {
   if (error != null) {
-    console.log('connection failed')
+    console.log(error)
   } else {
     console.log('connection successful')
     release()
