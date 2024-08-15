@@ -1,6 +1,7 @@
 import { Request } from "express"
 export interface Decoded {
-    user: string,
+    user_id: string,
+    name: string,
     email: string
 }
 export interface CustomRequest extends Request {

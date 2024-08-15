@@ -5,7 +5,7 @@ export const Routes = [
         authrequired: false
     },
     {
-        route: "/auth",
+        route: "/authenticate",
         target: "http://localhost:3000/api/auth/protected",
         authrequired: true
     }

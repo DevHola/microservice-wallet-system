@@ -11,19 +11,21 @@ export const limiter = rateLimit({
 export const authentication = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const headers = req.headers.authorization
     if(headers != null) {
-        const token = headers.split(' ')[1]
-    if(token.length === 0){
+        const [header, token] = headers.split(' ')
+    if(header === 'Bearer' && token.length === 0){
         res.status(401).json({ message: 'Invalid Access Token' }) 
     }
    try {
-    //NOT COMPLETED
-    const response = await axios.post('/',{
+    const url = process.env.AVURL as string
+    const response = await axios.post(url, null, {
 	headers: {
-	'Authorization': 'Bearer '+ token }})
-    req.user = response.data.user as Decoded
+	'authorization': ` Bearer ${token}`}})
+     req.user = response.data.user as Decoded
     next()
    } catch (error) {
-     res.status(401).json({ message: 'Unauthorized: Invalid Token' });
+     if(error instanceof Error){
+        res.status(401).json({ message: error.message });
+     }
     
    }
 
