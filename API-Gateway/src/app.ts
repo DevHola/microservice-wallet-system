@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import cors from 'cors'
 import helmet from "helmet";
-import { createProxyMiddleware, Options } from "http-proxy-middleware";
+import { createProxyMiddleware} from "http-proxy-middleware";
 import { Routes } from "./routes/routes";
 import { limiter, authentication } from "./middleware";
 import { CustomRequest } from "./interfaces";
