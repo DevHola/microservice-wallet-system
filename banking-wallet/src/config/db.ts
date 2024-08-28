@@ -5,7 +5,7 @@ export const pool = new Pool({
   password: '12345678',
   host: 'localhost',
   port: 5432,
-  database: 'Banking_wallet'
+  database: 'Banking'
 })
 
 pool.connect((error, client, release) => {
