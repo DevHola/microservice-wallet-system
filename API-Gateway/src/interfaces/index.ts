@@ -7,3 +7,8 @@ export interface Decoded {
 export interface CustomRequest extends Request {
     user?: Decoded
 }
+export interface User {
+    user_id: string,
+    name: string,
+    email: string
+}

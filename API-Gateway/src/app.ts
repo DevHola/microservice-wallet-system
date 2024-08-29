@@ -7,7 +7,7 @@ import helmet from "helmet";
 import { createProxyMiddleware} from "http-proxy-middleware";
 import { Routes } from "./routes/routes";
 import { limiter, authentication } from "./middleware";
-import { CustomRequest } from "./interfaces";
+import { User } from "./interfaces";
 dotenv.config({path: path.join(__dirname, '.env')})
 const app: Application = express()
 app.use(cors())
@@ -23,7 +23,7 @@ Routes.forEach(router => {
             pathRewrite: (path, req) => path.replace(router.route, ''),
             on: {
                 proxyReq: (proxyReq, req, res) => {
-                    const customReq = req as CustomRequest & { user?: { user_id: string, email: string } };
+                    const customReq = req as Request & { user?: User };
                     if (customReq.user) {
                         proxyReq.setHeader('X-User-Id', customReq.user.user_id);
                         proxyReq.setHeader('X-User-Email', customReq.user.email);
@@ -42,7 +42,7 @@ Routes.forEach(router => {
 });
 app.get('/', (req: Request,res: Response)=> {
     res.status(200).json({
-        message: 'API Gateway'
+        message: "Welcome to Our E-Wallet Service Our e-wallet is designed to provide you with a secure, fast, and convenient way to manage your digital transactions. Powered by QR code technology, our platform allows you to make payments, send and receive money with just a scan, ensuring a seamless experience every time. Whether you're shopping in-store, paying bills, or transferring funds, our e-wallet offers robust security and reliability. Explore a new way to handle your finances with advanced features, all in one user-friendly interface."
     })
 } )
 app.listen(7000, () => {
