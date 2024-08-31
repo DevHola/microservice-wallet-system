@@ -16,9 +16,8 @@ export const inAppTransact = async (req: CustomRequest, res: Response, next: Nex
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { type, amount, initiator_wallet_id, destination_wallet_id, destination_user_id } = req.body
       const userId = req.user.user_id
-
       const data = {
-        type, amount, initiator_wallet_id, destination_wallet_id, userId, destination_user_id
+        type, amount, initiator_wallet_id, destination_wallet_id, initiator_user_id: userId, destination_user_id
       }
       const transaction = await initInAppTransaction(data)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
@@ -26,6 +25,9 @@ export const inAppTransact = async (req: CustomRequest, res: Response, next: Nex
       if (transaction.id != null) {
         if (check) {
           await Transaction(data, transaction.id)
+          res.status(200).json({
+            message: 'Transaction successful'
+          })
         } else {
           await transactionStatus(transaction.id, 'failed')
           throw new Error('Transaction failed')
@@ -53,7 +55,7 @@ export const inAppTransactRequestFund = async (req: CustomRequest, res: Response
       const userId = req.user.user_id
 
       const data = {
-        type, amount, initiator_wallet_id, destination_wallet_id, userId, destination_user_id
+        type, amount, initiator_wallet_id, destination_wallet_id, initiator_user_id: userId, destination_user_id
       }
       const transaction = await initInAppTransaction(data)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

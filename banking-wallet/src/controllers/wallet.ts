@@ -33,7 +33,7 @@ export const getwalletbyuser = async (req: Request, res: Response, next: NextFun
     })
   }
   try {
-    const userId: string = req.body.userId
+    const userId: string = req.params.id
     const wallet = await allWalletByUser(userId)
     if (wallet != null) {
       res.status(200).json({
@@ -53,9 +53,9 @@ export const getwalletbyaddress = async (req: Request, res: Response, next: Next
     })
   }
   try {
-    const address: string = req.body.address
+    const address: string = req.params.id
     const wallet = await walletdetailbyaddress(address)
-    if (wallet != null) {
+    if (wallet !== null) {
       res.status(200).json({
         wallet
       })

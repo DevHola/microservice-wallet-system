@@ -18,7 +18,6 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
         if (header === 'Bearer' && token.length === 0) {
             return res.status(401).json({ message: 'Invalid Access Token' });
         }
-        
         try {
             const url = process.env.AVURL as string;
             const response = await axios.post(url, null, {
@@ -26,7 +25,6 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
                     'authorization': `Bearer ${token}`
                 }
             });
-            
             const user = response.data.user as Decoded
             req.user = user;
             next();

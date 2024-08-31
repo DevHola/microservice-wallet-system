@@ -8,7 +8,7 @@ export interface wallet_type {
 }
 export interface wallet {
   wallet_id?: number
-  Balance: number
+  balance: number
   wallet_address: string
   user_id: string
   wallet_type_id?: number

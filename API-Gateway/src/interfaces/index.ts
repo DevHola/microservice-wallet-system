@@ -4,9 +4,7 @@ export interface Decoded {
     name: string,
     email: string
 }
-export interface CustomRequest extends Request {
-    user?: Decoded
-}
+
 export interface User {
     user_id: string,
     name: string,
