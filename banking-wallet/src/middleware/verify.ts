@@ -1,13 +1,13 @@
-import { type Response, type NextFunction } from 'express'
+import { type Request, type Response, type NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import { type CustomRequest } from '../interfaces/interface'
+
 export interface DecodedToken {
   user_id: string
   email: string
   name: string
 }
 
-export const verifyAccessToken = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+export const verifyAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const headers = req.headers.authorization
   if (headers != null && process.env.AUTH_ACCESS_TOKEN_SECRET != null) {
     const [header, token] = headers.split(' ')

@@ -1,10 +1,12 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { validationResult } from 'express-validator/check'
 import { getallTransaction, getAllTransactionBywallet, getInAppTransactionById, getsuccessfulTransToWallet, initInAppTransaction, RequestFunds, Transaction, transactionStatus } from '../services/inapp'
-import { type CustomRequest } from '../interfaces/interface'
+import { type User } from '../interfaces/interface'
 import { ifbalancehigher } from '../services/walletservice'
 
-export const inAppTransact = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+// import { ifbalancehigher } from '../services/walletservice'
+
+export const inAppTransact = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -12,10 +14,11 @@ export const inAppTransact = async (req: CustomRequest, res: Response, next: Nex
     })
   }
   try {
-    if (req.user?.user_id != null) {
+    if (req.user != null) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { type, amount, initiator_wallet_id, destination_wallet_id, destination_user_id } = req.body
-      const userId = req.user.user_id
+      const user = req.user as User
+      const userId = user.user_id
       const data = {
         type, amount, initiator_wallet_id, destination_wallet_id, initiator_user_id: userId, destination_user_id
       }
@@ -41,7 +44,7 @@ export const inAppTransact = async (req: CustomRequest, res: Response, next: Nex
   }
 }
 
-export const inAppTransactRequestFund = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+export const inAppTransactRequestFund = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -49,10 +52,11 @@ export const inAppTransactRequestFund = async (req: CustomRequest, res: Response
     })
   }
   try {
-    if (req.user?.user_id != null) {
+    if (req.user != null) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { type, amount, initiator_wallet_id, destination_wallet_id, destination_user_id } = req.body
-      const userId = req.user.user_id
+      const user = req.user as User
+      const userId = user.user_id
 
       const data = {
         type, amount, initiator_wallet_id, destination_wallet_id, initiator_user_id: userId, destination_user_id

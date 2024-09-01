@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
 import { validationResult } from 'express-validator/check'
 import { type Request, type Response, type NextFunction } from 'express'
 import { allWalletByUser, WalletBalance, walletCreation, walletdetailbyaddress } from '../services/walletservice'
-import { type CustomRequest } from '../interfaces/interface'
-export const createWallet = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+import { type User } from '../interfaces/interface'
+export const createWallet = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const error = validationResult(req)
   if (!error.isEmpty()) {
     res.status(400).json({
@@ -10,9 +11,10 @@ export const createWallet = async (req: CustomRequest, res: Response, next: Next
     })
   }
   try {
-    if (req.user != null) {
+    if ((req.user) != null) {
       const walletType: number = req.body.type
-      const id = req.user.user_id
+      const user = req.user as User
+      const id = user.user_id
       if (id != null) {
         await walletCreation(id, walletType)
         res.status(200).json({

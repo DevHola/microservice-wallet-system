@@ -1,14 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export {}
+import * as express from 'express'
+import { type User } from '../../interfaces/interface'
+
 declare global {
   namespace Express {
-    export interface User {
-      user?: {
-        user_id?: string
-        name?: string
-        email: string
-        usertype?: number
-      }
+    interface Request {
+      user?: User
     }
   }
 }

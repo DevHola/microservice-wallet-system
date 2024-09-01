@@ -15,11 +15,13 @@ import wtrouter from './routes/wallet_type'
 import router from './routes/inapp'
 import etrouter from './routes/external'
 import { sendMail } from './controllers/test'
+import passport from 'passport'
 
 const app: Application = express()
 app.use(cors())
 app.use(morgan('combined'))
 app.use(express.json())
+app.use(passport.initialize())
 app.use(express.urlencoded({ extended: true }))
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({

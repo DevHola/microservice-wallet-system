@@ -1,11 +1,11 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { validationResult } from 'express-validator/check'
 import { createInitExternalTrans, getallexttrans, getallexttransbywallet, getexttransbyid, getexttransbyref } from '../services/external'
-import { type CustomRequest } from '../interfaces/interface'
 import { ifbalancehigher } from '../services/walletservice'
 import { transactionStatus } from '../services/inapp'
+import { type User } from '../interfaces/interface'
 
-export const initExternalTransactionCredit = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+export const initExternalTransactionCredit = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -13,8 +13,9 @@ export const initExternalTransactionCredit = async (req: CustomRequest, res: Res
     })
   }
   try {
-    if ((req.user?.user_id) != null) {
-      const userId = req.user.user_id
+    if ((req.user) != null) {
+      const user = req.user as User
+      const userId = user.user_id
       const { type, amount, walletId, paymentMethod } = req.body
       const data = {
         type, amount, wallet_id: walletId, payment_method: paymentMethod, user_id: userId, ref: ''
@@ -31,7 +32,7 @@ export const initExternalTransactionCredit = async (req: CustomRequest, res: Res
   }
 }
 
-export const initExternalTransactionWithdrawal = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+export const initExternalTransactionWithdrawal = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -39,8 +40,9 @@ export const initExternalTransactionWithdrawal = async (req: CustomRequest, res:
     })
   }
   try {
-    if ((req.user?.user_id) != null) {
-      const userId = req.user.user_id
+    if ((req.user) != null) {
+      const user = req.user as User
+      const userId = user.user_id
       const { type, amount, walletId, paymentMethod } = req.body
       const data = {
         type, amount, wallet_id: walletId, payment_method: paymentMethod, user_id: userId, ref: ''

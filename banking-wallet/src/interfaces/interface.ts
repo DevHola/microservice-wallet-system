@@ -1,4 +1,3 @@
-import { type Request } from 'express'
 export interface wallet_type {
   wallet_type_id: number
   name: string
@@ -36,11 +35,7 @@ export interface externalTransaction extends transaction {
   ref: string
 }
 export interface User {
-  user_id?: string
-  name?: string
-  email: string
+  user_id: string
+  email: string | undefined
   usertype?: number
-}
-export interface CustomRequest extends Request {
-  user?: User
 }
