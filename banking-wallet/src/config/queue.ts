@@ -19,7 +19,8 @@ export const createMQConsumer = async (url: string, queueName: string, exchangeN
           const parsed = JSON.parse(msg.content.toString())
           console.log(parsed.data.userid)
           const id = parsed.data.userid as string
-          await walletCreation(id)
+          const pin = parsed.data.pin as string
+          await walletCreation(id, pin)
           channel.ack(msg)
         } catch (error) {
           throw error
@@ -72,8 +73,8 @@ export const createMQETConsumer = async (url: string, queueName: string, exchang
         try {
           const parsed = JSON.parse(msg.content.toString())
           console.log(parsed.data.userid)
-          const id = parsed.data.userid as string
-          await walletCreation(id)
+          // const id = parsed.data.userid as string
+          // await walletCreation(id)
           channel.ack(msg)
         } catch (error) {
           throw error

@@ -1,11 +1,8 @@
 import { type Request, type Response, type NextFunction } from 'express'
 import { validationResult } from 'express-validator/check'
-import { getallTransaction, getAllTransactionBywallet, getInAppTransactionById, getsuccessfulTransToWallet, initInAppTransaction, RequestFunds, Transaction, transactionStatus } from '../services/inapp'
+import { getallTransaction, getAllTransactionBywallet, getInAppTransactionById, getPendingInAppTransactionById, getsuccessfulTransToWallet, initInAppTransaction, RequestFunds, Transaction, transactionStatus } from '../services/inapp'
 import { type User } from '../interfaces/interface'
-import { ifbalancehigher } from '../services/walletservice'
-
-// import { ifbalancehigher } from '../services/walletservice'
-
+import { ifbalancehigher, walletpinvalidate } from '../services/walletservice'
 export const inAppTransact = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -29,15 +26,52 @@ export const inAppTransact = async (req: Request, res: Response, next: NextFunct
         if (check) {
           await Transaction(data, transaction.id)
           res.status(200).json({
-            message: 'Transaction successful'
+            message: 'Proceed to Authorise Transaction',
+            transaction: transaction.id
           })
         } else {
           await transactionStatus(transaction.id, 'failed')
-          throw new Error('Transaction failed')
+          res.status(401).json({
+            message: 'Transaction Failed due to insufficient balance'
+          })
         }
       }
     } else {
       throw new Error('Authentication failed')
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const authorizeInAppTransact = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      errors: errors.array()
+    })
+  }
+  try {
+    const transactionid = req.params.id
+    const walletpin = req.body.pin as string
+    const transaction = await getPendingInAppTransactionById(transactionid)
+    const transinitiator = transaction.initiator_wallet_id
+    const transid = transaction.id
+    const transinitiatorUserid = transaction.initiator_user_id
+    if (transinitiator !== null && transid != null && transinitiatorUserid != null) {
+      const check: boolean = await ifbalancehigher(transaction.initiator_wallet_id, transaction.amount, transinitiatorUserid)
+      const validatepin: boolean = await walletpinvalidate(walletpin, transinitiator)
+      if (validatepin && check) {
+        await Transaction(transaction, transid)
+        res.status(200).json({
+          message: 'Transaction successful'
+        })
+      } else {
+        await transactionStatus(transid, 'failed')
+        res.status(401).json({
+          message: 'Transaction Failed due to Incorrect Wallet Pin'
+        })
+      }
     }
   } catch (error) {
     next(error)
@@ -62,18 +96,49 @@ export const inAppTransactRequestFund = async (req: Request, res: Response, next
         type, amount, initiator_wallet_id, destination_wallet_id, initiator_user_id: userId, destination_user_id
       }
       const transaction = await initInAppTransaction(data)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const check: boolean = await ifbalancehigher(destination_wallet_id, data.amount, userId)
-      if (transaction.id != null) {
-        if (check) {
-          await RequestFunds(data, transaction.id)
-        } else {
-          await transactionStatus(transaction.id, 'failed')
-          throw new Error('Transaction failed')
-        }
+      const transactionid = transaction.id
+      if (transactionid != null) {
+        // await RequestFunds(data, transactionid)
+        res.status(200).json({
+          message: 'Sent. Awaiting Destination Wallet Authorization.'
+        })
       }
     } else {
       throw new Error('Authentication failed')
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const authorizeInAppTransactRequestFund = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.status(400).json({
+      errors: errors.array()
+    })
+  }
+  try {
+    const transactionid = req.params.id
+    const walletpin = req.body.pin as string
+    const transaction = await getPendingInAppTransactionById(transactionid)
+    const userId = transaction.destination_user_id
+    const transid = transaction.id
+    const walletid = transaction.destination_wallet_id
+    if (walletid !== null && transid != null && userId != null) {
+      const check: boolean = await ifbalancehigher(walletid, transaction.amount, userId)
+      const validatepin: boolean = await walletpinvalidate(walletpin, walletid)
+      if (validatepin && check) {
+        await RequestFunds(transaction, transid)
+        res.status(200).json({
+          message: 'Transaction successful'
+        })
+      } else {
+        await transactionStatus(transid, 'failed')
+        res.status(401).json({
+          message: 'Transaction Failed due to Incorrect Wallet Pin or Insufficient Balance'
+        })
+      }
     }
   } catch (error) {
     next(error)

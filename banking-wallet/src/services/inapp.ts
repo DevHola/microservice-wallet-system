@@ -68,6 +68,12 @@ export const getInAppTransactionById = async (id: string): Promise<inAppTransact
   const transaction = inApp.rows[0] as inAppTransaction
   return transaction
 }
+export const getPendingInAppTransactionById = async (id: string): Promise<inAppTransaction> => {
+  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,initiator_user_id,destination_user_id,status FROM inAppTransactions WHERE id=$1 AND status=$2', [id, 'pending'])
+  const transaction = inApp.rows[0] as inAppTransaction
+  return transaction
+}
+
 // suceess and failed
 export const getAllTransactionBywallet = async (id: string): Promise<inAppTransaction[]> => {
   const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inAppTransactions WHERE initiator_wallet_id=$1', [id])

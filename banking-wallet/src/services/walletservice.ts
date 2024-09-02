@@ -1,10 +1,11 @@
 import { pool } from '../config/db'
+import crypto from 'crypto'
 import { type wallet } from '../interfaces/interface'
 
-export const walletCreation = async (userId: string, walletType: number = 1): Promise<void> => {
+export const walletCreation = async (userId: string, pin: string, walletType: number = 1): Promise<void> => {
   const balance: number = 0
   const walletAddress: string = '12384nnfdndn5'
-  await pool.query('INSERT INTO wallets (balance, wallet_address, user_id, wallet_type_id) VALUES ($1, $2, $3, $4)', [balance, walletAddress, userId, walletType])
+  await pool.query('INSERT INTO wallets (balance, wallet_address, user_id, wallet_type_id, pin) VALUES ($1, $2, $3, $4, $5)', [balance, walletAddress, userId, walletType, pin])
 }
 
 export const walletupdatebalance = async (balance: number, address: string, userId: string): Promise<void> => {
@@ -16,6 +17,21 @@ export const ifbalancehigher = async (walletid: string, amount: number, userid: 
   const wallet = findwallet.rows[0] as wallet
   if (wallet.balance > amount) {
     return true
+  } else {
+    return false
+  }
+}
+export const walletpinvalidate = async (pin: string, walletid: string): Promise<boolean> => {
+  const secret = process.env.AUTH_ACCESS_TOKEN_SECRET
+  if (secret != null) {
+    const pinhash = crypto.createHmac('sha512', secret).update(pin).digest('hex')
+    const findwallet = await pool.query('SELECT pin FROM wallets WHERE wallet_id=$1', [walletid])
+    const wallet = findwallet.rows[0] as wallet
+    if (wallet.pin === pinhash) {
+      return true
+    } else {
+      return false
+    }
   } else {
     return false
   }

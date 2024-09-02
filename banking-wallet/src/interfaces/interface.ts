@@ -11,6 +11,7 @@ export interface wallet {
   wallet_address: string
   user_id: string
   wallet_type_id?: number
+  pin: string
   created_At?: string
   updated_At?: string
 }
