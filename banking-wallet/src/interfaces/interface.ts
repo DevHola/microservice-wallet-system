@@ -12,6 +12,8 @@ export interface wallet {
   user_id: string
   wallet_type_id?: number
   pin: string
+  is_blocked: boolean
+  is_setup_complete: boolean
   created_At?: string
   updated_At?: string
 }

@@ -19,8 +19,8 @@ export const createMQConsumer = async (url: string, queueName: string, exchangeN
           const parsed = JSON.parse(msg.content.toString())
           console.log(parsed.data.userid)
           const id = parsed.data.userid as string
-          const pin = parsed.data.pin as string
-          await walletCreation(id, pin)
+          const pin = null
+          await walletCreation(id, pin, true, false)
           channel.ack(msg)
         } catch (error) {
           throw error

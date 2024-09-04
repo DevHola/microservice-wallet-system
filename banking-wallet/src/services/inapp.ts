@@ -29,7 +29,7 @@ export const Transaction = async (data: inAppTransaction, id: string): Promise<v
       await pool.query('BEGIN')
       await pool.query('UPDATE wallets SET balance=$1 where wallet_id=$2 AND user_id=$3', [newInitBalance, data.initiator_wallet_id, data.initiator_user_id])
       await pool.query('UPDATE wallets SET balance=$1 where wallet_id=$2 AND user_id=$3', [newDestBalance, data.destination_wallet_id, data.destination_user_id])
-      await pool.query('UPDATE inapp_transactions SET status=$1 WHERE id=$2', ['success', id])
+      await pool.query('UPDATE inapp_transactions SET authorised=$1, status=$2 WHERE id=$3', [true, 'success', id])
       await pool.query('COMMIT')
     }
   } catch (error) {
@@ -54,7 +54,7 @@ export const RequestFunds = async (data: inAppTransaction, id: string): Promise<
       await pool.query('BEGIN')
       await pool.query('UPDATE wallets SET Balance=$1 where wallet_id=$2 AND user_id=$3', [newInitBalance, data.initiator_wallet_id, data.initiator_user_id])
       await pool.query('UPDATE wallets SET Balance=$1 where wallet_id=$2 AND user_id=$3', [newDestBalance, data.destination_wallet_id, data.destination_user_id])
-      await pool.query('UPDATE inapp_transactions SET status=$1 WHERE id=$2', ['success', id])
+      await pool.query('UPDATE inapp_transactions SET authorised=$1, status=$2 WHERE id=$3', [true, 'success', id])
       await pool.query('COMMIT')
     }
   } catch (error) {
@@ -64,31 +64,31 @@ export const RequestFunds = async (data: inAppTransaction, id: string): Promise<
   }
 }
 export const getInAppTransactionById = async (id: string): Promise<inAppTransaction> => {
-  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inAppTransactions WHERE id=$1', [id])
+  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inapp_transactions WHERE id=$1', [id])
   const transaction = inApp.rows[0] as inAppTransaction
   return transaction
 }
 export const getPendingInAppTransactionById = async (id: string): Promise<inAppTransaction> => {
-  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,initiator_user_id,destination_user_id,status FROM inAppTransactions WHERE id=$1 AND status=$2', [id, 'pending'])
+  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,initiator_user_id,destination_user_id,status FROM inapp_transactions WHERE id=$1 AND status=$2', [id, 'pending'])
   const transaction = inApp.rows[0] as inAppTransaction
   return transaction
 }
 
 // suceess and failed
 export const getAllTransactionBywallet = async (id: string): Promise<inAppTransaction[]> => {
-  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inAppTransactions WHERE initiator_wallet_id=$1', [id])
+  const inApp = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inapp_transactions WHERE initiator_wallet_id=$1', [id])
   const transactions = inApp.rows[0] as inAppTransaction[]
   return transactions
 }
 // success only
 export const getsuccessfulTransToWallet = async (id: string): Promise<inAppTransaction[]> => {
-  const wallettransaction = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inAppTransactions WHERE destination_wallet_id=$1 AND status=$2', [id, 'success'])
+  const wallettransaction = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inapp_transactions WHERE destination_wallet_id=$1 AND status=$2', [id, 'success'])
   const transactions = wallettransaction.rows as inAppTransaction[]
   return transactions
 }
 
 export const getallTransaction = async (): Promise<inAppTransaction[]> => {
-  const wallettransaction = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inAppTransactions', [])
+  const wallettransaction = await pool.query('SELECT id,type,amount,initiator_wallet_id,destination_wallet_id,status FROM inapp_transactions', [])
   const transaction = wallettransaction.rows as inAppTransaction[]
   return transaction
 }

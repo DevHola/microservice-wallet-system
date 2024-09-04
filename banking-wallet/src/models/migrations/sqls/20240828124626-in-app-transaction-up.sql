@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS inapp_transactions (
     destination_wallet_id SERIAL,
     initiator_user_id UUID,
     destination_user_id UUID,
+    authorised BOOLEAN NOT NULL DEFAULT false
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
