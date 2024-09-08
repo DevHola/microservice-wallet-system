@@ -34,7 +34,6 @@ export interface inAppTransaction extends transaction {
 export interface externalTransaction extends transaction {
   wallet_id: string
   user_id: string
-  payment_method: string
   ref: string
 }
 export interface User {
