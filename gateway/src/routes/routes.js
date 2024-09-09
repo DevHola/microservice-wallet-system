@@ -12,20 +12,8 @@ export const Routes = [
         authrequired: true
     },
     {
-        route: "/authtype",
-        target: "http://localhost:3000/api/v1/auth/types",
-        name: 'Auth-service',
-        authrequired: true   
-    },
-    {
         route: "/wallet",
         target: "http://localhost:3001/api/v1/wallet",
-        name: 'Wallet-service',
-        authrequired: true 
-    },
-    {
-        route: "/wallet-type",
-        target: "http://localhost:3001/api/v1/wallet-type",
         name: 'Wallet-service',
         authrequired: true 
     },
@@ -39,6 +27,12 @@ export const Routes = [
         route: "/etrans",
         target: "http://localhost:3001/api/v1/eTransaction",
         name: 'Wallet-service',
+        authrequired: true 
+    },
+	{
+        route: "/payment",
+        target: "http://localhost:3003/api/v1/payment/processing",
+        name: 'processing-service',
         authrequired: true 
     }
 

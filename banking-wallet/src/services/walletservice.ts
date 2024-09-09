@@ -8,7 +8,7 @@ export const walletCreation = async (userId: string, pin: any, blocked: boolean,
   await pool.query('INSERT INTO wallets (balance, wallet_address, user_id, wallet_type_id, pin, is_blocked, is_setup_complete) VALUES ($1, $2, $3, $4, $5, $6, $7)', [balance, walletAddress, userId, walletType, pin, blocked, setupComplete])
 }
 
-export const walletupdatebalance = async (balance: number, address: string, userId: string): Promise<void> => {
+export const walletupdatebalance = async (balance: any, address: string, userId: string): Promise<void> => {
   await pool.query('UPDATE wallets SET balance=$1 where wallet_address=$2 AND user_id=$3', [balance, address, userId])
 }
 
