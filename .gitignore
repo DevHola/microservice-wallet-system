@@ -1,2 +1,8 @@
 banking-wallet/node_modules
 banking-wallet/src/.env
+gateway/node_modules
+gateway/src/.env
+mail/node_modules
+mail/src/.env
+processing/node_modules
+processing/src/.env
