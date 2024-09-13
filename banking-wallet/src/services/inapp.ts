@@ -1,5 +1,6 @@
 import { pool } from '../config/db'
 import { type inAppTransaction } from '../interfaces/interface'
+import { createBalanceHistory } from './balance_history'
 import { balance } from './walletservice'
 import Decimal from 'decimal.js'
 
@@ -31,6 +32,21 @@ export const Transaction = async (data: inAppTransaction, id: string): Promise<v
       await pool.query('UPDATE wallets SET balance=$1 where wallet_id=$2 AND user_id=$3', [newDestBalance, data.destination_wallet_id, data.destination_user_id])
       await pool.query('UPDATE inapp_transactions SET authorised=$1, status=$2 WHERE id=$3', [true, 'success', id])
       await pool.query('COMMIT')
+      const initdata = {
+        user_id: data.initiator_user_id,
+        transaction_id: id,
+        amount: data.amount,
+        balance_before: initBalance.balance,
+        type: 'InApp Transfer - Debit'
+      }
+      const destdata = {
+        user_id: data.destination_user_id,
+        transaction_id: id,
+        amount: data.amount,
+        balance_before: destBalance.balance,
+        type: 'InApp Transfer - Credit'
+      }
+      await Promise.all([createBalanceHistory(initdata, data.initiator_wallet_id), createBalanceHistory(destdata, data.destination_wallet_id)])
     }
   } catch (error) {
     await pool.query('ROLLBACK')
@@ -56,6 +72,21 @@ export const RequestFunds = async (data: inAppTransaction, id: string): Promise<
       await pool.query('UPDATE wallets SET Balance=$1 where wallet_id=$2 AND user_id=$3', [newDestBalance, data.destination_wallet_id, data.destination_user_id])
       await pool.query('UPDATE inapp_transactions SET authorised=$1, status=$2 WHERE id=$3', [true, 'success', id])
       await pool.query('COMMIT')
+      const initdata = {
+        user_id: data.initiator_user_id,
+        transaction_id: id,
+        amount: data.amount,
+        balance_before: initBalance.balance,
+        type: 'InApp Transfer - Credit'
+      }
+      const destdata = {
+        user_id: data.destination_user_id,
+        transaction_id: id,
+        amount: data.amount,
+        balance_before: destBalance.balance,
+        type: 'InApp Transfer - Debit'
+      }
+      await Promise.all([createBalanceHistory(initdata, data.initiator_wallet_id), createBalanceHistory(destdata, data.destination_wallet_id)])
     }
   } catch (error) {
     await pool.query('ROLLBACK')

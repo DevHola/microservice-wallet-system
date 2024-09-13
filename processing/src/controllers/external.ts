@@ -19,7 +19,7 @@ export const initExternalTransactionCredit = async (req: Request, res: Response,
       const user = req.user as User
       const userId = user.user_id
       const { type, amount, walletId, email, address } = req.body
-      // const amountinnaira: number = amount * 100
+      const amountinnaira = amount * 100
       const data = {
         type, amount, wallet_id: walletId, user_id: userId, ref: '', address
       }
@@ -30,7 +30,7 @@ export const initExternalTransactionCredit = async (req: Request, res: Response,
           const paystack = new Paystack(secret)
           const params = {
             email,
-            amount
+            amount: amountinnaira.toString()
           }
           const refdata = await paystack.transaction.initialize(params)
           const ref = refdata.data?.reference

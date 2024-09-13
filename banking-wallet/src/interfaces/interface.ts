@@ -31,13 +31,20 @@ export interface inAppTransaction extends transaction {
   initiator_user_id?: string
   destination_user_id: string
 }
-export interface externalTransaction extends transaction {
-  wallet_id: string
-  user_id: string
-  ref: string
-}
+
 export interface User {
   user_id: string
   email: string | undefined
   usertype?: number
+}
+
+export interface Balance_History {
+  id?: string
+  wallet_id?: string
+  user_id?: string
+  transaction_id: string
+  amount: number
+  balance_before: number
+  type: string
+  created_at?: string
 }

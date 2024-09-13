@@ -1,6 +1,7 @@
 import amqp, { type Connection, type Channel } from 'amqplib'
 import { walletCreation, walletdetailbyaddress, /* walletdetailbyaddress, */ walletupdatebalance } from '../services/walletservice'
 import Decimal from 'decimal.js'
+import { createBalanceHistory } from '../services/balance_history'
 export const createMQConsumer = async (url: string, queueName: string, exchangeName: string, routekey: string): Promise<any> => {
   const exchangeType: string = 'direct'
   // eslint-disable-next-line no-useless-catch
@@ -26,15 +27,23 @@ export const createMQConsumer = async (url: string, queueName: string, exchangeN
           } else if (parsed.action === 'update_wallet_balance') {
             const address: string = parsed.data.wallet
             const amt: number = parsed.data.amount
-            console.log(amt)
+            const type: string = parsed.data.type
+            const transactionid: string = parsed.data.transactionid
             const user: string = parsed.data.user
             const wallet = await walletdetailbyaddress(address)
-            console.log(wallet)
             if (wallet != null) {
               const walletBalance = new Decimal(wallet.balance)
               const amount = new Decimal(amt)
               const newbalance = walletBalance.plus(amount).toFixed(2)
               await walletupdatebalance(newbalance, address, user)
+              const data = {
+                user_id: wallet.user_id,
+                transaction_id: transactionid,
+                amount: amt,
+                balance_before: wallet.balance,
+                type
+              }
+              await createBalanceHistory(data, wallet.wallet_id)
               channel.ack(msg)
             }
           }

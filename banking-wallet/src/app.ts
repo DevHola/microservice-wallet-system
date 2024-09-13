@@ -14,7 +14,6 @@ import morgan from 'morgan'
 import wrouter from './routes/wallet'
 import wtrouter from './routes/wallet_type'
 import router from './routes/inapp'
-import etrouter from './routes/external'
 import { createWalletOnSignup, updateWalletAndBalanceHistory } from './controllers/queue'
 import passport from 'passport'
 
@@ -32,7 +31,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 app.use('/api/v1/wallet', wrouter)
 app.use('/api/v1/wallet-type', wtrouter)
 app.use('/api/v1/iTransaction', router)
-app.use('/api/v1/eTransaction', etrouter)
 
 createWalletOnSignup()
 updateWalletAndBalanceHistory()

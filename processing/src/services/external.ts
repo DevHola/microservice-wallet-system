@@ -2,6 +2,7 @@ import { pool } from '../config/db'
 import { type externalTransaction } from '../interfaces/interface'
 
 export const createInitExternalTrans = async (data: externalTransaction): Promise<externalTransaction> => {
+  console.log(data)
   const init = await pool.query('INSERT INTO external_transactions (type,amount,wallet_id,user_id,ref,address) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id', [data.type, data.amount, data.wallet_id, data.user_id, data.ref, data.address])
   const transaction = init.rows[0] as externalTransaction
   return transaction

@@ -96,7 +96,7 @@ export const walletdetailbyid = async (walletid: string, userId: string): Promis
 }
 
 export const walletdetailbyaddress = async (walletAddress: string): Promise<wallet> => {
-  const findwallet = await pool.query('SELECT balance, wallet_address, is_blocked, is_setup_complete, name FROM wallets INNER JOIN wallet_type ON wallets.wallet_type_id = wallet_type.wallet_type_id WHERE wallets.wallet_address=$1', [walletAddress])
+  const findwallet = await pool.query('SELECT wallet_id, user_id balance, wallet_address, is_blocked, is_setup_complete, name FROM wallets INNER JOIN wallet_type ON wallets.wallet_type_id = wallet_type.wallet_type_id WHERE wallets.wallet_address=$1', [walletAddress])
   const wallet = findwallet.rows[0] as wallet
   console.log(wallet)
   return wallet
