@@ -1,18 +1,17 @@
-E-Wallet Backend System
-Overview
+# E-Wallet Backend System
+# Overview
 This is the backend system for the E-Wallet application, built with a microservices architecture to ensure scalability and maintainability. The system is composed of several microservices, including the Auth microservice for authentication and token management, the Wallet microservice for managing wallet operations and in-app transactions between users, the Processing microservice for handling external funding and withdrawals, and the Mail microservice for sending emails.
 
-Table of Contents
+# Table of Contents
 Overview
 Features
 Technologies Used
 Installation
 Usage
-API Documentation
-Testing
 Contributing
 License
-Features
+
+# Features
 User authentication and authorization with JWT
 Wallet creation and management
 In-app transactions (transfer and money requests between users)
@@ -22,7 +21,8 @@ Microservices architecture for better scalability
 API Gateway for routing requests to appropriate services
 RabbitMQ for message queuing
 Redis for token management and rotation
-Technologies Used
+
+# Technologies Used
 Node.js
 Express
 PostgreSQL
@@ -33,7 +33,8 @@ Jest
 Supertest
 TypeScript
 JWT for authentication
-Installation
+
+# Installation
 Clone the repository:
 
 bash
