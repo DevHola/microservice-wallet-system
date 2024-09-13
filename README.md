@@ -52,6 +52,8 @@ This is the backend system for the E-Wallet application, built with a microservi
     npm install
     cd ../mail-service
     npm install
+    cd ../mail-service
+    npm install
     ```
 
 3. **Set up environment variables**:
@@ -63,18 +65,58 @@ This is the backend system for the E-Wallet application, built with a microservi
     JWT_SECRET=your_jwt_secret
     RABBITMQ_URL=your_rabbitmq_url
     REDIS_URL=your_redis_url
+    DBUSER= ''
+    DBPASSWORD= ''
+    DBHOST= 'localhost'
+    DBPORT= ''
+    DATABASE= ''
 
     # Auth service
-    AUTH_SERVICE_PORT=3001
+    The Auth service has a separate repository. Clone and set it up from https://github.com/DevHola/Authentication-Microservice-Boilerplate.
+
+    PORT=3001
+    PORTDEV=3000
+    AUTH_REFRESH_TOKEN_SECRET=''
+    AUTH_REFRESH_TOKEN_EXPIRY=3600s
+    AUTH_ACCESS_TOKEN_SECRET=''
+    AUTH_REFRESH_TOKEN_EXPIRY=1800s
+
+    AUTH_ACCESS_TOKEN_EXPIRY=60s
+    AUTH_RESET_TOKEN_SECRET=''
+    RESET_PASSWORD_TOKEN_EXPIRY_MINS=5
+    FRONTEND_URL= ''
+    REDIS_URL=''
+    MQCONNECTURL= ''
+
+
+
+    # Gateway
+    AVURL=''
 
     # Wallet service
-    WALLET_SERVICE_PORT=3002
+    PORT=3001
+    MQCONNECTURL=''
+    AUTH_ACCESS_TOKEN_SECRET=''
+    PAYSTACK_SECRET=''
+
 
     # Processing service
-    PROCESSING_SERVICE_PORT=3003
+    PORT=3003
+    MQCONNECTURL=''
+    AUTH_ACCESS_TOKEN_SECRET=''
+    PAYSTACK_SECRET=''
+
 
     # Mail service
-    MAIL_SERVICE_PORT=3004
+    PORT=6000
+    MAIL_HOST=''
+    MAIL_USER=''
+    MAIL_PASS=''
+    MAIL_PORT=2525
+    FROM=''
+    FRONTEND_URL=''
+    MQCONNECTURL=''
+
     ```
 
 4. **Start the services using Docker**:
