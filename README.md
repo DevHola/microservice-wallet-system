@@ -3,39 +3,38 @@
 This is the backend system for the E-Wallet application, built with a microservices architecture to ensure scalability and maintainability. The system is composed of several microservices, including the Auth microservice for authentication and token management, the Wallet microservice for managing wallet operations and in-app transactions between users, the Processing microservice for handling external funding and withdrawals, and the Mail microservice for sending emails.
 
 # Table of Contents
-Overview
-Features
-Technologies Used
-Installation
-Usage
-Contributing
-License
+  * Overview
+  * Features
+  * Technologies Used
+  * Installation
+  * Usage
+  * Contributing
 
 # Features
-User authentication and authorization with JWT
-Wallet creation and management
-In-app transactions (transfer and money requests between users)
-External funding and withdrawals
-Email notifications
-Microservices architecture for better scalability
-API Gateway for routing requests to appropriate services
-RabbitMQ for message queuing
-Redis for token management and rotation
+* User authentication and authorization with JWT
+* Wallet creation and management
+* In-app transactions (transfer and money requests between users)
+* External funding and withdrawals
+* Email notifications
+* Microservices architecture for better scalability
+* API Gateway for routing requests to appropriate services
+* RabbitMQ for message queuing
+* Redis for token management and rotation
 
 # Technologies Used
-Node.js
-Express
-PostgreSQL
-Docker
-RabbitMQ
-Redis
-Jest
-Supertest
-TypeScript
-JWT for authentication
+* Node.js
+* Express
+* PostgreSQL
+* Docker
+* RabbitMQ
+* Redis
+* Jest
+* Supertest
+* TypeScript
+* JWT for authentication
 
 # Installation
-Clone the repository:
+* Clone the repository:
 
 bash
 Copy code
@@ -84,10 +83,10 @@ The API Gateway routes requests to the appropriate microservice.
 Use Postman or any API client to interact with the endpoints.
 Ensure the services are running and accessible through their respective ports.
 
-Contributing
+# Contributing
 We welcome contributions! Please follow these steps to contribute:
 
-Fork the repository.
+# Fork the repository.
 Create a new branch (git checkout -b feature/your-feature).
 Make your changes.
 Commit your changes (git commit -m 'Add some feature').
